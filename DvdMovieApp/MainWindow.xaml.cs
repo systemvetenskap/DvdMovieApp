@@ -26,16 +26,17 @@ namespace DvdMovieApp
             InitializeComponent();
         }
 
-        private void btnOk_Click(object sender, RoutedEventArgs e)
+        private async void btnOk_Click(object sender, RoutedEventArgs e)
         {
-            // select * from film
-
-            // lista alla filmer i min databas
-
-            // repository pattern
-
+            /* 
+            {
+                "ConnectionStrings": {
+                    "develop": "Server=localhost;Port=5432;User Id=dvd_user;Password=hemligt;Database=dvd;"
+                }
+            }
+            */
             DbRepository db = new();
-            db.GetFilms();
+            var film = await db.GetFilm();
         }
     }
 }
