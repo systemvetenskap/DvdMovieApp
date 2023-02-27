@@ -12,7 +12,7 @@ namespace DvdMovieApp.DAL
         {
             // hämta filmer från databas
             // eller hämta från mitt api
-            // kopplar upp mig med mitt hemliga lösenord
+            // Puh
         }
     }
 }
