@@ -1,4 +1,5 @@
 ﻿using DvdMovieApp.DAL;
+using DvdMovieApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,8 @@ namespace DvdMovieApp
 
         private async void btnOk_Click(object sender, RoutedEventArgs e)
         {
+            //int value = int.Parse(textBox.Text);
+            
             /* 
             {
                 "ConnectionStrings": {
@@ -36,7 +39,31 @@ namespace DvdMovieApp
             }
             */
             DbRepository db = new();
-            var film = await db.GetFilm();
+            var films = await db.GetFilms();
+            listBox.ItemsSource = films;
+            listBox.DisplayMemberPath="Title";
+            //var film = await db.GetFilmById();
+            
+            var category = new Category()
+            {
+                 Name="Barn"
+            };
+            try
+            {
+               //category = await db.AddCategory2(category);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void listBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (listBox.SelectedItem is Film select)
+            {
+                MessageBox.Show(select.Film_id.ToString());
+            }
         }
     }
 }

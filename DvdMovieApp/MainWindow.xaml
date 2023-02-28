@@ -8,6 +8,8 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Button x:Name="btnOk" Content="Ok" Margin="125,130,439,217" Click="btnOk_Click"/>
+        <TextBox x:Name="textBox" HorizontalAlignment="Left" Margin="113,64,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <ListBox x:Name="listBox" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="421,56,151,161" MouseDoubleClick="listBox_MouseDoubleClick"/>
 
     </Grid>
 </Window>
