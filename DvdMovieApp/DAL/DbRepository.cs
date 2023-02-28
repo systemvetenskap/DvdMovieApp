@@ -120,10 +120,9 @@ namespace DvdMovieApp.DAL
         {
             try
             {
-                // Ni får aldrig skicka in parametrar på detta sätt i en databas!
-                string stmt = $"insert into category(name) values ({category.Name})";
-
-                stmt = "insert into category(name) values(@name)";
+               
+                // Glömde ju korrigera frågan så att den returnerade primärnyckeln!!
+                string stmt = "insert into category(name) values(@name) returning category_id";
                 await using var dataSource = NpgsqlDataSource.Create(_connectionString);
 
                 await using var command = dataSource.CreateCommand(stmt);

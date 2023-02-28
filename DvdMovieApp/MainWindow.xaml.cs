@@ -46,11 +46,11 @@ namespace DvdMovieApp
             
             var category = new Category()
             {
-                 Name="Barn"
+                 Name="Barnfilm"
             };
             try
             {
-               //category = await db.AddCategory2(category);
+               category = await db.AddCategory2(category);
             }
             catch (Exception ex)
             {
