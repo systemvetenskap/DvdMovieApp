@@ -207,6 +207,10 @@ namespace DvdMovieApp.DAL
                 }
                 throw new Exception(message, ex);
             }
+            catch(Exception)
+            {
+                throw new Exception("ett annat fel");
+            }
             
         }
 
