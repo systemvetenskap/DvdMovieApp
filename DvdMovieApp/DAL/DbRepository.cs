@@ -101,7 +101,12 @@ namespace DvdMovieApp.DAL
                 film = new Film()
                 {
                     Film_id = reader.GetInt32(0),
-                    Title = (string)reader["title"]
+                    Title = (string)reader["title"],
+                    //Language = new()
+                    //{
+                    //    Language_id= reader.GetInt32(1),
+                    //    Name = (string)reader["name"]   
+                    //}
                 };
                 films.Add(film);
             }
