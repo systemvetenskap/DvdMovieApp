@@ -17,5 +17,7 @@ namespace DvdMovieApp.Models
         /// Movie title
         /// </summary>
         public string Title { get; set; }
+
+        public Language Language { get; set; }
     }
 }

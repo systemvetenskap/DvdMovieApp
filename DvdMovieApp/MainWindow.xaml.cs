@@ -30,7 +30,7 @@ namespace DvdMovieApp
         private async void btnOk_Click(object sender, RoutedEventArgs e)
         {
             //int value = int.Parse(textBox.Text);
-            
+
             /* 
             {
                 "ConnectionStrings": {
@@ -38,6 +38,8 @@ namespace DvdMovieApp
                 }
             }
             */
+            
+
             DbRepository db = new();
             var films = await db.GetFilms();
             listBox.ItemsSource = films;
@@ -46,11 +48,17 @@ namespace DvdMovieApp
             
             var category = new Category()
             {
-                 Name="Barnfilm"
+                 Name="Barnfilm1232459",
+                 Test="ett värde"
             };
             try
             {
-               category = await db.AddCategory2(category);
+               //category = await db.AddCategory2(category);
+               category = await db.GetCategoryById(3);
+               category = await db.GetCategoryById(13);
+               category = await db.GetCategoryById(1);
+               category = await db.GetCategoryById(15);
+               category = await db.GetCategoryById(11);
             }
             catch (Exception ex)
             {

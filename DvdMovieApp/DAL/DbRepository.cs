@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -26,7 +27,7 @@ namespace DvdMovieApp.DAL
             // ORM
 
             // Koppla upp mot databasen
-            string stmt = "select * from film where film_id@id";
+            string stmt = "select * from film where film_id=@id";
             await using var dataSource = NpgsqlDataSource.Create(_connectionString);
 
             await using var command = dataSource.CreateCommand(stmt);
@@ -48,7 +49,43 @@ namespace DvdMovieApp.DAL
             //https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-7.0&tabs=windows
             return film;
         }
-        
+
+        public async Task<Category> GetCategoryById(int id)
+        {
+            // hämta filmer från databas
+            // ORM
+
+            // Koppla upp mot databasen
+            string stmt = "select * from category where category_id = @id";
+            await using var dataSource = NpgsqlDataSource.Create(_connectionString);
+
+            await using var command = dataSource.CreateCommand(stmt);
+            command.Parameters.AddWithValue("id", id);
+            await using var reader = await command.ExecuteReaderAsync();
+            Category category = new Category();
+            while (await reader.ReadAsync())
+            {
+                //if (reader["test"] == DBNull.Value)
+                //{
+
+                //}
+                category = new()
+                {
+                    Category_id = reader.GetInt32(0),
+                    Name = reader["name"] == DBNull.Value ? null : (string)reader["name"],
+                    Test = ConvertFromDBVal<string>(reader["test"])
+                };
+            }
+
+
+            // Kopplingsträng
+            // i den har vi vårt lösenord och användarnamn
+            //https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-7.0&tabs=windows
+            return category;
+        }
+        // DRY
+        // don't repeat yourself
+
         public async Task<IEnumerable<Film>> GetFilms()
         {
             List<Film> films = new List<Film>();
@@ -122,11 +159,24 @@ namespace DvdMovieApp.DAL
             {
                
                 // Glömde ju korrigera frågan så att den returnerade primärnyckeln!!
-                string stmt = "insert into category(name) values(@name) returning category_id";
+                string stmt = "insert into category(name, test) values(@name, @test) returning category_id";
                 await using var dataSource = NpgsqlDataSource.Create(_connectionString);
 
                 await using var command = dataSource.CreateCommand(stmt);
+                // en ifsats som handlar om värden i databasen bör undvikas
+                // men, det är ok att använda dem mot datatyper
+                //if (category.Test == null)
+                //{
+                //    command.Parameters.AddWithValue("test", DBNull.Value);
+                //}
+                //else
+                //{
+                //    command.Parameters.AddWithValue("test", category.Test);
+
+                //}
+                command.Parameters.AddWithValue("test", (object)category.Test??DBNull.Value);
                 command.Parameters.AddWithValue("name", category.Name);
+                
                 category.Category_id =(int) await command.ExecuteScalarAsync();
                 return category;
             }
@@ -153,6 +203,24 @@ namespace DvdMovieApp.DAL
                 throw new Exception(message, ex);
             }
             
+        }
+
+        private static T? ConvertFromDBVal<T>(object obj)
+        {
+            if (obj == null || obj == DBNull.Value)
+            {
+                return default;
+            }
+            return (T)obj;
+        }
+
+        private static object ConvertToDbVal<T>(object obj)
+        {
+            if (obj == null || obj == string.Empty)
+            {
+                return DBNull.Value;
+            }
+            return (T)obj;
         }
 
     }
